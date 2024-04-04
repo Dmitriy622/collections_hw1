@@ -14,15 +14,25 @@ public class EmployeeService {
     private static final int MAX_EMPLOYEES = 10;
     private final Map<String, Employee> employees = new HashMap<>();
 
+    private final ValidationService validationService;
+
+    public EmployeeService(ValidationService validationService) {
+        this.validationService = validationService;
+    }
+
     public void add(String firstName, String lastName, int department, int salary) {
         if (employees.size() == MAX_EMPLOYEES) {
             throw new EmployeeStorageIsFullException();
         }
+        firstName = validationService.validate(firstName);
+        lastName = validationService.validate(lastName);
+
         String key = buildKey(firstName, lastName);
         if (employees.containsKey(key)) {
             throw new EmployeeAlreadyAddedException();
         }
-        employees.put(key, new Employee(firstName, lastName, department, salary));
+
+        employees.put(key,new Employee(firstName,lastName, department, salary));
     }
 
     public Employee remove(String firstName, String lastName) {
@@ -73,7 +83,7 @@ public class EmployeeService {
     public void indexSalaryForDepartment(double index, int department) {
         employees.values().stream()
                 .filter(employee -> employee.getDepartment() == department)
-                .forEach(employee -> employee.setSalary((int) (employee.getSalary() + employee.getSalary()*index/100)));
+                .forEach(employee -> employee.setSalary((int) (employee.getSalary() + employee.getSalary() * index / 100)));
     }
 
     public double averageSalaryForDepartment(int department) {
