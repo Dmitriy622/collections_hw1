@@ -18,6 +18,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class DepartmentServiceTest {
+//исправленный
 
     private final Collection<Employee> employees = List.of(
             new Employee("Ivan", "Ivanov", 1, 10000),
