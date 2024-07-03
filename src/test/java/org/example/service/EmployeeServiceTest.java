@@ -1,15 +1,16 @@
 package org.example.service;
 
+import org.example.exception.EmployeeAlreadyAddedException;
 import org.example.exception.EmployeeNotFoundException;
 import org.example.exception.EmployeeStorageIsFullException;
 import org.example.model.Employee;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -57,7 +58,7 @@ public class EmployeeServiceTest {
     void addNegative2Test() {
         Employee employee = new Employee("Ivan", "Ivanov", 1, 10000);
         assertThat(employeeService.findAll()).contains(employee);
-        assertThatExceptionOfType(EmployeeStorageIsFullException.class)
+        assertThatExceptionOfType(EmployeeAlreadyAddedException.class)
                 .isThrownBy(() -> employeeService.add("Ivan", "Ivanov", 1, 10000));
     }
 
@@ -74,16 +75,15 @@ public class EmployeeServiceTest {
     @Test
     void removeNegativeTest() {
         Employee expected = new Employee("Nikolay", "Nikolayev", 1, 15000);
-        assertThat(employeeService.findAll()).contains(expected);
         assertThatExceptionOfType(EmployeeNotFoundException.class)
                 .isThrownBy(() -> employeeService.remove("Nikolay", "Nikolayev"));
+        assertThat(employeeService.findAll()).doesNotContain(expected);
     }
 
     @Test
     void findPositiveTest() {
-        Employee expected = new Employee("Ivan", "Ivanov", 1, 10000);
-        assertThat(employeeService.findAll()).contains(expected);
-        assertThat(employeeService.find("Ivan", "Ivanov"));
+        String expected = employeeService.find("Ivan", "Ivanov").getFirstName() + " " + employeeService.find("Ivan", "Ivanov").getLastName();
+        Assertions.assertEquals("Ivan Ivanov", expected);
     }
 
     @Test
@@ -91,7 +91,7 @@ public class EmployeeServiceTest {
         Employee expected = new Employee("Nikolay", "Nikolayev", 1, 15000);
         assertThat(employeeService.findAll()).contains(expected);
         assertThatExceptionOfType(EmployeeNotFoundException.class)
-                .isThrownBy(() -> employeeService.find("Nikolay", "Nikolayev"));
+                .isThrownBy(() -> employeeService.find("Nikolay", "Petrov"));
     }
 
     @Test

@@ -1,6 +1,6 @@
 package org.example.service;
 
-import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Assertions;
 import org.example.model.Employee;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -68,7 +68,8 @@ public class DepartmentServiceTest {
 
     @Test
     public void getSumSalaryNegativeTest() {
-        assertThat(departmentService.getSumOfSalaries(4)).isNull();
+        int expected = 0;
+        Assertions.assertEquals(expected, departmentService.getSumOfSalaries(4));
     }
 
     @Test
