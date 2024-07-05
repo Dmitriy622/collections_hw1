@@ -83,16 +83,20 @@ public class EmployeeServiceTest {
 
     @Test
     void findPositiveTest() {
-        String expected = employeeService.find("Ivan", "Ivanov").getFirstName() + " " + employeeService.find("Ivan", "Ivanov").getLastName();
-        Assertions.assertEquals("Ivan Ivanov", expected);
+        Employee expected = new Employee("Ivan", "Ivanov", 1, 10000);
+        assertThat(employeeService.findAll()).contains(expected);
+        Assertions.assertEquals(expected, employeeService.find("Ivan", "Ivanov"));
+        // так вроде нельзя:
+        //String expected = employeeService.find("Ivan", "Ivanov").getFirstName() + " " + employeeService.find("Ivan", "Ivanov").getLastName();
+       // Assertions.assertEquals("Ivan Ivanov", expected);
     }
 
     @Test
     void findNegativeTest() {
         Employee expected = new Employee("Nikolay", "Nikolayev", 1, 15000);
-        assertThat(employeeService.findAll()).contains(expected);
+        assertThat(employeeService.findAll()).doesNotContain(expected);
         assertThatExceptionOfType(EmployeeNotFoundException.class)
-                .isThrownBy(() -> employeeService.find("Nikolay", "Petrov"));
+                .isThrownBy(() -> employeeService.find("Nikolay", "Nikolayev"));
     }
 
     @Test
